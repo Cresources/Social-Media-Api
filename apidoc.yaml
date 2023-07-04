@@ -1,0 +1,770 @@
+openapi: "3.0.0"
+
+info:
+  version: "1.0"
+  title: Social Media Posts, Comments and Likes Api
+  description: "Free Api for handling social media posts, comments and likes with third party integration"
+  contact:
+    name: API team
+    url: https://localhost:5000/
+
+servers:
+  - url: https://localhost:5000/
+    description: Development server
+
+paths:
+  /status:
+    get:
+      summary: "Get /status of the databases used in the api"
+      description: "Get the status of the databases used in the api. The api would not work if the database clients are not connected"
+      operationId: getStatus
+      responses:
+        200:
+          description: database status response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+  /users:
+    post:
+      summary: ""
+      description: ""
+      operationId: users
+      parameters:
+        - name: "email" 
+          in: query
+          description: "email of the user"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "bob@dylan.com"
+        - name: "password" 
+          in: query
+          description: "password of the user"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "ddd5569l7)e&"
+      responses:
+        200:
+          description: 'returns te id of the created user and the email'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users-good'
+        401:
+          description: 'returns te id of the created user and the email'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users-bad'
+  
+  /newPost:
+    post:
+      summary: "make a new post"
+      description: "make a new post"
+      operationId: newpost
+      parameters:
+        - name: "userId" 
+          in: query
+          description: "id of the user of this post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a2"
+        - name: "content" 
+          in: query
+          description: "the text content of this post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "I use nodejs react mongodb and redis for webdev"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/new-post'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/new-post-fail'
+    
+  /posts:
+    get:
+      summary: "Get all posts"
+      description: "get all posts from the database"
+      operationId: posts
+      responses:
+        200:
+          description: returns on successful query
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/posts'
+    
+  /editPost:
+    put:
+      summary: "edit a post"
+      description: "update an existing post"
+      operationId: editpost
+      parameters:
+        - name: "content" 
+          in: query
+          description: "the new text content of this post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "I use react react mongodb and redis for webdev"
+        - name: "postId" 
+          in: query
+          description: "the id of the existing post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "I use react react mongodb and redis for webdev"
+        
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/editPost-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/editPost-fail'
+        
+  /getPost:
+    get:
+      summary: "get a particular post"
+      description: "get the post of a particular id"
+      operationId: getpost
+      parameters:
+        - name: "id" 
+          in: query
+          description: "the id of the post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a4"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPost-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPost-fail'
+  
+  /delPost:
+    delete:
+      summary: "delete a post"
+      description: "delete a post"
+      operationId: delpost
+      parameters:
+        - name: "postId" 
+          in: query
+          description: "id of this post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a2"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delPost-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delPost-fail'
+  /newComment:
+    post:
+      summary: "create a new comment under a post"
+      description: "make a new comment"
+      operationId: newcomment
+      parameters:
+        - name: "userId" 
+          in: query
+          description: "id of the user of this comment"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a2"
+        - name: "comment" 
+          in: query
+          description: "the text content of this comment"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "I use typescript, mongodb and redis for webdev"
+        - name: "postId" 
+          in: query
+          description: "the id of the post this comment belongs to"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a9"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/newComment-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/newComment-fail'
+  
+  /comments:
+    get:
+      summary: "get all comments under a post"
+      description: "get the comments of a post"
+      operationId: getcomments
+      parameters:
+        - name: "id" 
+          in: query
+          description: "the id of the post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a4"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comments-fail'
+  
+  /editComment:
+    put:
+      summary: "edit a comment"
+      description: "edit an existing comment"
+      operationId: editComment
+      parameters:
+        - name: "comment" 
+          in: query
+          description: "the new text content of this comment"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "I use chatgpt, react mongodb and redis for webdev"
+        - name: "postId" 
+          in: query
+          description: "the id of the existing post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a4"
+        - name: "commentId" 
+          in: query
+          description: "the id of the comment to update"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a4"
+        
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/editComment-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/editComment-fail'
+  
+  /getComment:
+    get:
+      summary: "get a particular comment"
+      description: "get the comment of an id"
+      operationId: getComment
+      parameters:
+        - name: "id" 
+          in: query
+          description: "the id of the comment"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a4"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getComment-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getComment-fail'
+  
+  /delComment:
+    delete:
+      summary: "delete a comment"
+      description: "delete a comment"
+      operationId: delComment
+      parameters:
+        - name: "commentId" 
+          in: query
+          description: "id of the comment to delete"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a2"
+        - name: "postId" 
+          in: query
+          description: "id of the post the comment belongs"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a2"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delComment-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delComment-fail'
+  
+  /like:
+    post:
+      summary: "like a post"
+      description: "like a post"
+      operationId: likePost
+      parameters:
+        - name: "postId" 
+          in: query
+          description: "id of this post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a2"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/likePost-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/likePost-fail'
+  
+  /unlike:
+    delete:
+      summary: "delete a like"
+      description: "delete a like"
+      operationId: unlikePost
+      parameters:
+        - name: "postId" 
+          in: query
+          description: "id of the post"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a2"
+        - name: "likeId" 
+          in: query
+          description: "id of the like to delete"
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "648ee7e01a6e307681b534a4"
+      responses:
+        200:
+          description: 'sucess response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unlikePost-good'
+        401:
+          description: 'failure response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unlikePost-fail'
+  
+  
+components:
+  schemas:
+    StatusResponse:
+      title: status
+      type: object
+      properties:
+        db:
+          type: string
+          description: "two possible statuses:\n
+          \n* `true`: mongo database is active.
+          \n* `false`: mongo database is still connecting"
+          example: 'true'
+        redis:
+          type: string
+          description: "two possible statuses:\n
+          \n* `true`: redis database is active.
+          \n* `false`: redis database is still connecting"
+          example: "true"
+    users-good:
+      title: users
+      type: object
+      properties:
+        email:
+          type: string
+          description: "the email of registered user"
+          example: 'bob@dylan.com'
+        id:
+          type: string
+          description: "the id of the registered user"
+          example: "648ee7e01a6e307681b53496"
+    
+    users-bad:
+      title: users
+      type: object
+      properties:
+        error:
+          type: string
+          description: "this user already exists"
+          example: 'This user already exists'
+          
+    new-post:
+      title: newpost
+      type: object
+      properties:
+        id:
+          type: string
+          description: "the id of the post"
+          example: '648ee7e01a6e307681b53496'
+          
+    new-post-fail:
+      title: newpost
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns if the id of the user does not exist or the id is invalid"
+          example: 'The id of the user does not exist'
+
+    posts:
+      title: posts
+      type: array
+      items:
+        type: object
+        properties:
+          postId:
+            type: string
+            description: "id of the post"
+            example: "648ee7e01a6e307681b53496"
+          content:
+            type: string
+            description: "The content of this post"
+            example: "I go to the park to code and breath fresh air"
+          userId:
+            type: string
+            description: "The id of the user of this post"
+            example: "648ee7e01a6e307681b53496"
+            
+    editPost-good:
+      title: editpost
+      type: object
+      properties:
+        sucess:
+          type: string
+          description: "returns on a successful update"
+          example: 'post updated successfully'
+  
+  
+    editPost-fail:
+      title: editpost
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update, two possible response\n
+          \n* `invalid id`: the id is not valid
+          \n* `post id does not exit`: id of the post does not exist"
+          example: 'post id does not exist'
+          
+    getPost-good:
+      title: getpost
+      type: object
+      properties:
+        postId:
+          type: string
+          description: "id of the post"
+          example: "648ee7e01a6e307681b53496"
+        content:
+          type: string
+          description: "The content of this post"
+          example: "I go to the park to code and breath fresh air"
+        userId:
+          type: string
+          description: "The id of the user of this post"
+          example: "648ee7e01a6e307681b53496"
+        
+    getPost-fail:
+      title: getPost
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update, two possible response\n
+          \n* `invalid id`: the id is not valid
+          \n* `post id does not exit`: id of the post does not exist"
+          example: 'post id does not exist'
+    
+    delPost-good:
+      title: delPost
+      type: object
+      properties:
+        sucess:
+          type: string
+          description: "returns on a successful update"
+          example: 'post deleted successfully'
+    
+    
+    delPost-fail:
+      title: delpost
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update, two possible response\n
+          \n* `invalid id`: the id is not valid
+          \n* `post id does not exit`: id of the post does not exist"
+          example: 'post id does not exist'
+          
+    newComment-good:
+      title: newComment
+      type: object
+      properties:
+        id:
+          type: string
+          description: "the id of the comment"
+          example: '648ee7e01a6e307681b53496'
+          
+    newComment-fail:
+      title: newComment
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update, three possible response\n
+          \n* `invalid id`: the id is not valid
+          \n* `post id does not exist`: id of the post does not exist
+          \n* `user id does not exist`: id of the user does not exist"
+          example: 'The id of the user does not exist'
+          
+    Comments-good:
+      title: Comments
+      type: array
+      items:
+        type: object
+        properties:
+          postId:
+            type: string
+            description: "id of the post"
+            example: "648ee7e01a6e307681b53496"
+          comment:
+            type: string
+            description: "The content of this comment"
+            example: "I go to the park to code and breath fresh air"
+          userId:
+            type: string
+            description: "The id of the user of this comment"
+            example: "648ee7e01a6e307681b53496"
+          commentId:
+            type: string
+            description: "The id of this comment belong"
+            example: "I am even in the park"
+      
+    Comments-fail:
+      title: Comments
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update, two possible responses\n
+          \n* `invalid id`: the id is not valid
+          \n* `post id does not exist`: id of the post does not exist"
+          example: 'no post exist for this post id'
+          
+    editComment-fail:
+      title: editComment
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update, three possible responses\n
+          \n* `invalid id`: the id is not valid
+          \n* `post id does not exist`: id of the post does not exist
+          \n* `comment id does not exist`: id of this comment does not exist"
+          example: 'comment id does not exist'
+          
+    editComment-good:
+      title: editComment
+      type: object
+      properties:
+        sucess:
+          type: string
+          description: "returns on a successful update"
+          example: 'comment updated successfully'
+      
+    getComment-good:    
+      title: getComment
+      type: object
+      properties:
+        postId:
+          type: string
+          description: "id of the post"
+          example: "648ee7e01a6e307681b53496"
+        comment:
+          type: string
+          description: "The content of this comment"
+          example: "I go to the park to code and breath fresh air"
+        userId:
+          type: string
+          description: "The id of the user of this comment"
+          example: "648ee7e01a6e307681b53496"
+        commentId:
+          type: string
+          description: "The id of this comment belong"
+          example: "I am even in the park"
+          
+    getComment-fail:
+      title: getComment
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update,two possible responses\n
+          \n* `comment id does not exit`: the comment id does not exist
+          \n* `invalid id`: the id is not valid"
+          example: 'comment id does not exist'
+          
+    delComment-good:
+      title: delComment
+      type: object
+      properties:
+        sucess:
+          type: string
+          description: "returns on a successful delete"
+          example: 'comment deleted successfully'
+    
+    delComment-fail:
+      title: delComment
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on a failed update,three possible responses\n
+          \n* `post id does not exit`: the post may have been deleted
+          \n* `comment id does not exit`: the comment id does not exist
+          \n* `invalid id`: the id is not valid"
+          example: 'comment id does not exist'   
+    
+    likePost-fail:
+      title: likePost
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on failure to like, two possible responses\n
+          \n* `invalid id`: the id is not valid
+          \n* `post id does not exist`: the post might have been deleted"
+          example: 'post id does not exist'
+          
+    likePost-good:
+      title: likePost
+      type: object
+      properties:
+        id:
+          type: string
+          description: "returns on a successful like"
+          example: '648ee7e01a6e307681b53496'
+          
+    unlikePost-good:
+      title: unlikePost
+      type: object
+      properties:
+        sucess:
+          type: string
+          description: "returns on a successful unlike"
+          example: 'like deleted successfully'
+          
+    unlikePost-fail:
+      title: unlikePost
+      type: object
+      properties:
+        error:
+          type: string
+          description: "returns on an unsuccessful unlike, two possible\n
+          \n* `invalid id`: the like id is not valid
+          \n* `post id does not exist`: the post might have been deleted"
+          example: 'this like object does not exist'
+      
+
+externalDocs:
+  description: Documentation and main site
+  url: ""
